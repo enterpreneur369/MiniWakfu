@@ -86,8 +86,8 @@ public class UIManager : MonoBehaviour
 
     public IEnumerator WaitAndContinueMonster(float segundos)
     {
-        GameManager.Instance.turnoPlayer = true;
         yield return new WaitForSeconds(segundos);
+        GameManager.Instance.turnoPlayer = true;
     }
     
     public IEnumerator WaitAndContinuePlayer(float segundos)

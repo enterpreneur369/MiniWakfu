@@ -32,6 +32,7 @@ public class Monster : MonoBehaviour
     public Image monsterImageUI; // Referencia al componente Image en la UI
     public Player player;
     private UIManager uiManager;
+    public bool hasAttacked = false;
     
     // Start is called before the first frame update
     void Start()
@@ -50,6 +51,8 @@ public class Monster : MonoBehaviour
 
     public void TryAttack()
     {
+        if (hasAttacked) return;
+        
         int resultadoDado = GameManager.Instance.rollDieMonster();
         Spell hechizoSeleccionado = SelectRandomSpell();
 
@@ -71,6 +74,7 @@ public class Monster : MonoBehaviour
             GameManager.Instance.turnosCombate += 1;
             uiManager.WaitAndContinueMonster(5f);
         }
+        hasAttacked = true;
     }
 
     Spell SelectRandomSpell()
@@ -82,6 +86,7 @@ public class Monster : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        // Aquí iría cualquier lógica que necesites ejecutar cada frame.
+        Debug.Log("VIDA MONSTRUO: " + currentMonsterZone.actualHealth);
+        Debug.Log(hasAttacked ? "YA ATACO EL MONSTRUO": "NO HA ATACADO");
     }
 }

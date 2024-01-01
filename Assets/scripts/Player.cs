@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 
@@ -52,7 +53,8 @@ public class Player : MonoBehaviour
             string message = danioCritico != 0 ?
                 $"(CRÍTICO) Atacas al {monster.name} con {hechizoSeleccionado.name} " +
                 $"y pierde {hechizoSeleccionado.damage + danioCritico} de vida" :
-                $"Atacas al {monster.name} con {hechizoSeleccionado.name} y pierde {hechizoSeleccionado.damage} de vida";
+                $"Atacas al {monster.currentMonsterZone.name} con {hechizoSeleccionado.name} " +
+                $"y pierde {hechizoSeleccionado.damage} de vida";
 
             _uiManager.ShowMessage(message);
         }
@@ -60,8 +62,8 @@ public class Player : MonoBehaviour
         {
             _uiManager.ShowMessage("Haz fallado tu ataque.");
         }
-
         StartCoroutine(_uiManager.WaitAndContinuePlayer(5f));
+        monster.hasAttacked = false;
         GameManager.Instance.turnosCombate += 1;
     }
 
@@ -69,4 +71,9 @@ public class Player : MonoBehaviour
     public void Ataque1() { Ataque(0); }
     public void Ataque2() { Ataque(1); }
     public void Ataque3() { Ataque(2); }
+
+    private void Update()
+    {
+        //Debug.Log("VIDA JUGADOR: " + vida);
+    }
 }

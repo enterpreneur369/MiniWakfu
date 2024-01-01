@@ -476,7 +476,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 158647641}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1857721807}
+        m_TargetAssemblyTypeName: Player, Assembly-CSharp
+        m_MethodName: Ataque3
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 1
 --- !u!114 &158647641
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1029,6 +1041,7 @@ MonoBehaviour:
     zone: Tainela
   monsterImageUI: {fileID: 1215935530}
   player: {fileID: 1857721807}
+  hasAttacked: 0
 --- !u!1 &1226547449
 GameObject:
   m_ObjectHideFlags: 0
@@ -1863,6 +1876,19 @@ MonoBehaviour:
   vida: 10
   kamas: 0
   nivel: 1
+  ataques:
+  - name: Espada Yopuka
+    damage: 1
+    difficultyToHit: 5
+  - name: Jabs
+    damage: 2
+    difficultyToHit: 12
+  - name: IraYopuka
+    damage: 4
+    difficultyToHit: 11
+  - name: IraYopuka
+    damage: 3
+    difficultyToHit: 20
 --- !u!1 &1910811896
 GameObject:
   m_ObjectHideFlags: 0
@@ -2078,7 +2104,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1913480140}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1857721807}
+        m_TargetAssemblyTypeName: Player, Assembly-CSharp
+        m_MethodName: Ataque1
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 1
 --- !u!114 &1913480140
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2307,6 +2345,7 @@ MonoBehaviour:
     zone: Tainela
   monsterImageUI: {fileID: 2041124318}
   player: {fileID: 1857721807}
+  hasAttacked: 0
 --- !u!114 &2041124318
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2396,7 +2435,7 @@ MonoBehaviour:
   estadoPartida: 1
   turnosCombate: 0
   posicionMapa: 1
-  turnoPlayer: 0
+  turnoPlayer: 1
 --- !u!4 &2097555196
 Transform:
   m_ObjectHideFlags: 0
@@ -2493,7 +2532,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 2104717675}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1857721807}
+        m_TargetAssemblyTypeName: Player, Assembly-CSharp
+        m_MethodName: Ataque2
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 1
 --- !u!114 &2104717675
 MonoBehaviour:
   m_ObjectHideFlags: 0
