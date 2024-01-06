@@ -39,16 +39,19 @@ public class Player : MonoBehaviour
         bool isHit = resultadoDado >= hechizoSeleccionado.difficultyToHit;
 
         if (isHit && GameManager.Instance.turnoPlayer && 
-            GameManager.Instance.estadoPartida == 2 && 
+            GameManager.Instance.estadoPartida == 2 && // COMBATE
             GameManager.Instance.turnosCombate > 0)
         {
             monster.currentMonsterZone.actualHealth -= (hechizoSeleccionado.damage + danioCritico);
             if (monster.currentMonsterZone.actualHealth <= 0)
             {
-                _uiManager.ShowMessage($"Has derrotado al {monster.name}");
+                GameManager.Instance.estadoPartida = 1;
+                _uiManager.ShowMessage($"Has derrotado al {monster.currentMonsterZone.name}");
+                monster.gameObject.SetActive(false);
+                Debug.Log("MONSTRUO DERROTADO");
                 GameManager.Instance.turnosCombate = 0;
+                monster.hasAttacked = true;
                 GameManager.Instance.turnoPlayer = true;
-                GameManager.Instance.estadoPartida = 2;
             }
             string message = danioCritico != 0 ?
                 $"(CRÍTICO) Atacas al {monster.name} con {hechizoSeleccionado.name} " +
@@ -62,9 +65,19 @@ public class Player : MonoBehaviour
         {
             _uiManager.ShowMessage("Haz fallado tu ataque.");
         }
-        StartCoroutine(_uiManager.WaitAndContinuePlayer(5f));
+        Invoke("Wait5Seconds", 4);
         monster.hasAttacked = false;
+        GameManager.Instance.turnoPlayer = false;
         GameManager.Instance.turnosCombate += 1;
+    }
+    
+    private void Wait5Seconds()
+    {
+        // Verifica si la instancia es válida antes de invocar el método
+        if (_uiManager != null)
+        {
+            _uiManager.WaitAndContinue();
+        }
     }
 
     // Métodos de ataque individuales que llaman al método general Ataque

@@ -16,6 +16,7 @@ public class UIManager : MonoBehaviour
     public Button btnAtaque1;
     public Button btnAtaque2;
     public Button btnAtaque3;
+    public int posicionMapa = 1;
 
     public TextMeshProUGUI txtEstado;
     // Otros botones según necesites
@@ -27,48 +28,48 @@ public class UIManager : MonoBehaviour
         switch (direction)
         {
             case "Arriba":
-                if (GameManager.Instance.posicionMapa == 1)
+                if (posicionMapa == 1)
                 {
-                    GameManager.Instance.posicionMapa = 3;
+                    posicionMapa = 3;
                     newPosition.y += 2;
                 } 
-                else if (GameManager.Instance.posicionMapa == 3)
+                else if (posicionMapa == 3)
                 {
-                    GameManager.Instance.posicionMapa = 5;
+                    posicionMapa = 5;
                     newPosition.y += 2;
                 }
-                else if (GameManager.Instance.posicionMapa == 5)
+                else if (posicionMapa == 5)
                 {
-                    GameManager.Instance.posicionMapa = 6;
+                    posicionMapa = 6;
                     newPosition.y += 2;
                 }
                 break;
             case "Derecha":
-                if (GameManager.Instance.posicionMapa == 1)
+                if (posicionMapa == 1)
                 {
-                    GameManager.Instance.posicionMapa = 2; // Zona de monstruo
+                    posicionMapa = 2; // Zona de monstruo
                     newPosition.y += 1;
                     newPosition.x += 3;
                     GameManager.Instance.turnoPlayer = false;
                     GameManager.Instance.estadoPartida = 2;
                 }
-                else if (GameManager.Instance.posicionMapa == 4)
+                else if (posicionMapa == 4)
                 {
-                    GameManager.Instance.posicionMapa = 5;
+                    posicionMapa = 5;
                     newPosition.y += 1;
                     newPosition.x += 3;
                 }
                 break;
             case "Izquierda":
-                if (GameManager.Instance.posicionMapa == 2)
+                if (posicionMapa == 2)
                 {
-                    GameManager.Instance.posicionMapa = 3;
+                    posicionMapa = 3;
                     newPosition.x -= 3;
                     newPosition.y += 1;
                 }
-                else if (GameManager.Instance.posicionMapa == 3)
+                else if (posicionMapa == 3)
                 {
-                    GameManager.Instance.posicionMapa = 4; // Zona de monstruo
+                    posicionMapa = 4; // Zona de monstruo
                     newPosition.x -= 3;
                     newPosition.y += 1;
                 }
@@ -83,17 +84,9 @@ public class UIManager : MonoBehaviour
     {
         txtEstado.text = message;
     }
-
-    public IEnumerator WaitAndContinueMonster(float segundos)
+    public void WaitAndContinue()
     {
-        yield return new WaitForSeconds(segundos);
-        GameManager.Instance.turnoPlayer = true;
-    }
-    
-    public IEnumerator WaitAndContinuePlayer(float segundos)
-    {
-        GameManager.Instance.turnoPlayer = false;
-        yield return new WaitForSeconds(segundos);
+        new WaitForSeconds(1f);
     }
     
     private void Update()
@@ -101,7 +94,7 @@ public class UIManager : MonoBehaviour
         UpdateUI();
         Debug.Log(GameManager.Instance.estadoPartida == 1 ? "EXPLORACION" : "COMBATE");
         Debug.Log(GameManager.Instance.turnoPlayer ? "TURNO PLAYER" : "TURNO MONSTER");
-        if (GameManager.Instance.IsMonsterEncounterPosition() 
+        if (IsMonsterEncounterPosition() 
             && GameManager.Instance.estadoPartida == 2)
         {
             // Aquí mostrarías el monstruo
@@ -152,7 +145,12 @@ public class UIManager : MonoBehaviour
                 {
                     ShowMessage("Un " + currentMonster.currentMonsterZone.name + 
                                 " ha aparecido y no te quieren dejar acercar.");
-                    StartCoroutine(WaitAndStartMonsterAttack(currentMonster));
+                    Invoke("Wait5Seconds", 4f);
+                    currentMonster.TryAttack();
+                }
+                else
+                {
+                    currentMonster.TryAttack();
                 }
             }
             else
@@ -166,15 +164,14 @@ public class UIManager : MonoBehaviour
         }
     }
     
-    private IEnumerator WaitAndStartMonsterAttack(Monster monster)
+    private void Wait5Seconds()
     {
-        yield return new WaitForSeconds(5f);
-        monster.TryAttack();
+        this.WaitAndContinue();
     }
 
     private void UpdateUI()
     {
-        if (GameManager.Instance.estadoPartida == 2)
+        if (GameManager.Instance.estadoPartida == 2) // COMBATE
         {
             btnArriba.gameObject.SetActive(false);
             btnDerecha.gameObject.SetActive(false);
@@ -187,16 +184,40 @@ public class UIManager : MonoBehaviour
                 btnAtaque3.gameObject.SetActive(true);
             }
         }
-        else
+        else // EXPLORACION
         {
-            btnArriba.gameObject.SetActive(GameManager.Instance.ShouldShowUpButton());
-            btnDerecha.gameObject.SetActive(GameManager.Instance.ShouldShowRightButton());
-            btnIzquierda.gameObject.SetActive(GameManager.Instance.ShouldShowLeftButton());
+            btnArriba.gameObject.SetActive(this.ShouldShowUpButton());
+            btnDerecha.gameObject.SetActive(this.ShouldShowRightButton());
+            btnIzquierda.gameObject.SetActive(this.ShouldShowLeftButton());
             
             btnAtaque1.gameObject.SetActive(false);
             btnAtaque2.gameObject.SetActive(false);
             btnAtaque3.gameObject.SetActive(false);
         }
         
+    }
+    
+    public bool ShouldShowUpButton()
+    {
+        // Lógica para determinar si se debe mostrar el botón hacia arriba
+        return posicionMapa == 1 || posicionMapa == 3 || posicionMapa == 5;
+    }
+
+    public bool ShouldShowRightButton()
+    {
+        // Lógica para determinar si se debe mostrar el botón hacia la derecha
+        return posicionMapa == 1 || posicionMapa == 4;
+    }
+
+    public bool ShouldShowLeftButton()
+    {
+        // Lógica para determinar si se debe mostrar el botón hacia la izquierda
+        return posicionMapa == 2 || posicionMapa == 3;
+    }
+    
+    public bool IsMonsterEncounterPosition()
+    {
+        // Devuelve verdadero si el jugador está en las posiciones 2 o 4
+        return posicionMapa == 2 || posicionMapa == 4 || posicionMapa == 6;
     }
 }

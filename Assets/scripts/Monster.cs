@@ -65,14 +65,16 @@ public class Monster : MonoBehaviour
                                   hechizoSeleccionado.name + " pierdes " +
                                   hechizoSeleccionado.damage + " de vida");
             uiManager.txtVida.text = "Vida  " + player.vida;
-            StartCoroutine(uiManager.WaitAndContinueMonster(5f));;
+            Invoke("Wait5Seconds", 4f);
             GameManager.Instance.turnosCombate += 1;
+            GameManager.Instance.turnoPlayer = true;
         }
         else
         {
             uiManager.ShowMessage(currentMonsterZone.name + " ha fallado su ataque.");
+            Invoke("Wait5Seconds", 4f); 
             GameManager.Instance.turnosCombate += 1;
-            uiManager.WaitAndContinueMonster(5f);
+            GameManager.Instance.turnoPlayer = true;
         }
         hasAttacked = true;
     }
@@ -83,10 +85,18 @@ public class Monster : MonoBehaviour
         return currentMonsterZone.spells[index];
     }
 
+    private void Wait5Seconds()
+    {
+        // Verifica si la instancia es válida antes de invocar el método
+        if (uiManager != null)
+        {
+            uiManager.WaitAndContinue();
+        }
+    }
     // Update is called once per frame
     void Update()
     {
         Debug.Log("VIDA MONSTRUO: " + currentMonsterZone.actualHealth);
-        Debug.Log(hasAttacked ? "YA ATACO EL MONSTRUO": "NO HA ATACADO");
+        Debug.Log(hasAttacked ? "YA ATACO EL MONSTRUO": "NO HA ATACADO EL MONSTRUO");
     }
 }
