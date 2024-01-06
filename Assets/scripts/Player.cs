@@ -46,39 +46,52 @@ public class Player : MonoBehaviour
             if (monster.currentMonsterZone.actualHealth <= 0)
             {
                 GameManager.Instance.estadoPartida = 1;
-                _uiManager.ShowMessage($"Has derrotado al {monster.currentMonsterZone.name}");
                 monster.gameObject.SetActive(false);
+                _uiManager.ShowMessage($"Has derrotado al {monster.currentMonsterZone.name}");
+                /*StartCoroutine(_uiManager.Wait(5));
                 Debug.Log("MONSTRUO DERROTADO");
                 GameManager.Instance.turnosCombate = 0;
                 monster.hasAttacked = true;
-                GameManager.Instance.turnoPlayer = true;
+                GameManager.Instance.turnoPlayer = true;*/
+                StartCoroutine(WaitAndChangeState(5, monster));
             }
-            string message = danioCritico != 0 ?
-                $"(CRÍTICO) Atacas al {monster.name} con {hechizoSeleccionado.name} " +
-                $"y pierde {hechizoSeleccionado.damage + danioCritico} de vida" :
-                $"Atacas al {monster.currentMonsterZone.name} con {hechizoSeleccionado.name} " +
-                $"y pierde {hechizoSeleccionado.damage} de vida";
+            else
+            {
+                string message = danioCritico != 0 ?
+                    $"(CRÍTICO) Atacas al {monster.name} con {hechizoSeleccionado.name} " +
+                    $"y pierde {hechizoSeleccionado.damage + danioCritico} de vida" :
+                    $"Atacas al {monster.currentMonsterZone.name} con {hechizoSeleccionado.name} " +
+                    $"y pierde {hechizoSeleccionado.damage} de vida";
 
-            _uiManager.ShowMessage(message);
+                _uiManager.ShowMessage(message);
+                StartCoroutine(WaitAndChangeTurn(5, false));
+            }
         }
         else
         {
             _uiManager.ShowMessage("Haz fallado tu ataque.");
+            StartCoroutine(WaitAndChangeTurn(5, false));
         }
-        Invoke("Wait5Seconds", 4);
+        StartCoroutine(_uiManager.Wait(5));
         monster.hasAttacked = false;
         GameManager.Instance.turnoPlayer = false;
         GameManager.Instance.turnosCombate += 1;
     }
     
-    private void Wait5Seconds()
+    private IEnumerator WaitAndChangeState(float delay, Monster monster)
     {
-        // Verifica si la instancia es válida antes de invocar el método
-        if (_uiManager != null)
-        {
-            _uiManager.WaitAndContinue();
-        }
+        yield return new WaitForSeconds(delay);
+        GameManager.Instance.turnosCombate = 0;
+        monster.hasAttacked = true;
+        GameManager.Instance.turnoPlayer = true;
     }
+
+    private IEnumerator WaitAndChangeTurn(float delay, bool isPlayerTurn)
+    {
+        yield return new WaitForSeconds(delay);
+        GameManager.Instance.turnoPlayer = isPlayerTurn;
+    }
+    
 
     // Métodos de ataque individuales que llaman al método general Ataque
     public void Ataque1() { Ataque(0); }
@@ -87,6 +100,6 @@ public class Player : MonoBehaviour
 
     private void Update()
     {
-        //Debug.Log("VIDA JUGADOR: " + vida);
+        Debug.Log("VIDA JUGADOR: " + vida);
     }
 }

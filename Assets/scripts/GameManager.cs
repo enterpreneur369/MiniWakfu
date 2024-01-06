@@ -6,7 +6,6 @@ public class GameManager : MonoBehaviour
     // 1 = mover, 2 = combate
     public int estadoPartida = 1;
     public int turnosCombate = 0;
-    
     public bool turnoPlayer = true;
     
     

@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -56,6 +57,13 @@ public class Monster : MonoBehaviour
         int resultadoDado = GameManager.Instance.rollDieMonster();
         Spell hechizoSeleccionado = SelectRandomSpell();
 
+        StartCoroutine(ManejarAtaque(resultadoDado, hechizoSeleccionado));
+    }
+
+    IEnumerator ManejarAtaque(int resultadoDado, Spell hechizoSeleccionado)
+    {
+        yield return new WaitForSeconds(5); 
+        
         if (resultadoDado >= hechizoSeleccionado.difficultyToHit 
             && GameManager.Instance.turnoPlayer == false 
             && GameManager.Instance.estadoPartida == 2)
@@ -65,14 +73,14 @@ public class Monster : MonoBehaviour
                                   hechizoSeleccionado.name + " pierdes " +
                                   hechizoSeleccionado.damage + " de vida");
             uiManager.txtVida.text = "Vida  " + player.vida;
-            Invoke("Wait5Seconds", 4f);
+            StartCoroutine(uiManager.Wait(5));
             GameManager.Instance.turnosCombate += 1;
             GameManager.Instance.turnoPlayer = true;
         }
         else
         {
             uiManager.ShowMessage(currentMonsterZone.name + " ha fallado su ataque.");
-            Invoke("Wait5Seconds", 4f); 
+            StartCoroutine(uiManager.Wait(5));
             GameManager.Instance.turnosCombate += 1;
             GameManager.Instance.turnoPlayer = true;
         }
@@ -84,15 +92,7 @@ public class Monster : MonoBehaviour
         int index = Random.Range(0, currentMonsterZone.spells.Length);
         return currentMonsterZone.spells[index];
     }
-
-    private void Wait5Seconds()
-    {
-        // Verifica si la instancia es válida antes de invocar el método
-        if (uiManager != null)
-        {
-            uiManager.WaitAndContinue();
-        }
-    }
+    
     // Update is called once per frame
     void Update()
     {

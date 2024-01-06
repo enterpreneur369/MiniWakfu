@@ -18,6 +18,7 @@ public class UIManager : MonoBehaviour
     public Button btnAtaque3;
     public int posicionMapa = 1;
 
+    private Monster currentMonster;
     public TextMeshProUGUI txtEstado;
     // Otros botones según necesites
     
@@ -84,9 +85,10 @@ public class UIManager : MonoBehaviour
     {
         txtEstado.text = message;
     }
-    public void WaitAndContinue()
+    public IEnumerator WaitAndAttack(float delay, Monster monster)
     {
-        new WaitForSeconds(1f);
+        yield return new WaitForSeconds(delay);
+        monster.TryAttack();
     }
     
     private void Update()
@@ -137,7 +139,7 @@ public class UIManager : MonoBehaviour
         GameObject monsterGameObject = GameObject.Find("Monster");
         if (monsterGameObject != null)
         {
-            Monster currentMonster = monsterGameObject.GetComponent<Monster>();
+            currentMonster = monsterGameObject.GetComponent<Monster>();
             if (currentMonster != null)
             {
                 monsterGameObject.SetActive(true);
@@ -145,13 +147,8 @@ public class UIManager : MonoBehaviour
                 {
                     ShowMessage("Un " + currentMonster.currentMonsterZone.name + 
                                 " ha aparecido y no te quieren dejar acercar.");
-                    Invoke("Wait5Seconds", 4f);
-                    currentMonster.TryAttack();
                 }
-                else
-                {
-                    currentMonster.TryAttack();
-                }
+                StartCoroutine(WaitAndAttack(5, currentMonster));
             }
             else
             {
@@ -164,9 +161,9 @@ public class UIManager : MonoBehaviour
         }
     }
     
-    private void Wait5Seconds()
+    public IEnumerator Wait(float delay)
     {
-        this.WaitAndContinue();
+        yield return new WaitForSeconds(delay);
     }
 
     private void UpdateUI()
@@ -177,11 +174,18 @@ public class UIManager : MonoBehaviour
             btnDerecha.gameObject.SetActive(false);
             btnIzquierda.gameObject.SetActive(false);
 
-            if (GameManager.Instance.turnoPlayer && GameManager.Instance.turnosCombate > 0)
+            if (GameManager.Instance.turnoPlayer && GameManager.Instance.turnosCombate > 0 
+                                                 && currentMonster.hasAttacked == true)
             {
                 btnAtaque1.gameObject.SetActive(true);
                 btnAtaque2.gameObject.SetActive(true);
                 btnAtaque3.gameObject.SetActive(true);
+            }
+            else
+            {
+                btnAtaque1.gameObject.SetActive(false);
+                btnAtaque2.gameObject.SetActive(false);
+                btnAtaque3.gameObject.SetActive(false);
             }
         }
         else // EXPLORACION
