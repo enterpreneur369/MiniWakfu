@@ -1,4 +1,4 @@
-# MiniWakfu
+# MiniWakfu (EN DESARROLLO)
 
 Este juego es una mezcla de D&D y Wakfu, se juega en un tablero estilo juego de mesa, el jugador 
 pasa por una serie de obstáculos para terminar la historia, que consiste en derrotar un monstruo
@@ -51,6 +51,10 @@ Cuando se encuentre en una casilla de monstruo estos controles de movimiento des
 En el turno del jugador aparecen los controles de ataque.
 
 Se sigue moviendo en el mapa hasta llegar al Jefe y derrotarlo.
+
+## Estado actual del juego (Version pre-alpha)
+
+https://enterpreneur369.itch.io/miniwakfu-in-develop
 
 ## Créditos
 
