@@ -66,7 +66,7 @@ public class Monster : MonoBehaviour
         
         if (resultadoDado >= hechizoSeleccionado.difficultyToHit 
             && GameManager.Instance.turnoPlayer == false 
-            && GameManager.Instance.estadoPartida == 2)
+            && GameManager.Instance.estadoPartida == 1)
         {
             player.vida -= hechizoSeleccionado.damage;
             uiManager.ShowMessage(currentMonsterZone.name + " te ataca con " + 
